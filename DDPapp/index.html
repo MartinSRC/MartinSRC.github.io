@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Danger Zone</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Danger Zone">
+  <meta name="author" content="MartinSRC">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/solarized_light.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="libraries/widgets/bootstrap/css/bootstrap.css"></link>
+<link rel=stylesheet href="libraries/widgets/quiz/css/demo.css"></link>
+<link rel=stylesheet href="libraries/widgets/interactive/css/aceeditor.css"></link>
+<link rel=stylesheet href="libraries/widgets/nvd3/css/nv.d3.css"></link>
+<link rel=stylesheet href="libraries/widgets/nvd3/css/rNVD3.css"></link>
+<link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  <script src="libraries/widgets/nvd3/js/jquery-1.8.2.min.js"></script>
+<script src="libraries/widgets/nvd3/js/d3.v3.min.js"></script>
+<script src="libraries/widgets/nvd3/js/nv.d3.min-new.js"></script>
+<script src="libraries/widgets/nvd3/js/fisheye.js"></script>
+
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+      <slide class="nobackground">
+    <article class="flexbox vcenter">
+      <span>
+        <img width='300px' src="assets/img/biglogo.gif">
+      </span>
+    </article>
+  </slide>
+    <slide class="title-slide segue nobackground">
+  <aside class="gdbar">
+    <img src="assets/img/logo.gif">
+  </aside>
+  <hgroup class="auto-fadein">
+    <h1>Danger Zone</h1>
+    <h2>Crime Rates by US State</h2>
+    <p>MartinSRC<br/>Head Marketer of Danger Mouse Crime Apps</p>
+  </hgroup>
+    <a href="https://github.com/MartinSRC/DDPapp/zipball/gh-pages" class="example">
+     Download
+    </a>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <article data-timings="">
+    <style> aside.gdbar img {width: 80px; height: 80px; position: absolute;
+right: 0; margin: 10px 10px;}.title-slide {background-color: #ECFAFD;}
+slides > slide:not(.nobackground):after {content: ' ';} slide.smallcode pre {
+  font-size: 12px; line-height: 1.5em;
+} </style>
+
+<h2>Big Problem (1/5)</h2>
+
+<div style='float:left;width:49%;'>
+  <p>The United States suffers from: Crime.</p>
+
+<ul class = "build incremental">
+<li>Which states are safe and which should we avoid? </li>
+<li>We have data to exploit: <a href="http://stat.ethz.ch/R-manual/R-devel/library/datasets/html/USArrests.html">USArrests</a></li>
+<li>All we need do is analyse it</li>
+</ul>
+
+<pre><code class="r">kable(head(USArrests),format=&#39;markdown&#39;)
+</code></pre>
+
+<table><thead>
+<tr>
+<th align="left"></th>
+<th align="right">Murder</th>
+<th align="right">Assault</th>
+<th align="right">UrbanPop</th>
+<th align="right">Rape</th>
+</tr>
+</thead><tbody>
+<tr>
+<td align="left">Alabama</td>
+<td align="right">13.2</td>
+<td align="right">236</td>
+<td align="right">58</td>
+<td align="right">21.2</td>
+</tr>
+<tr>
+<td align="left">Alaska</td>
+<td align="right">10.0</td>
+<td align="right">263</td>
+<td align="right">48</td>
+<td align="right">44.5</td>
+</tr>
+<tr>
+<td align="left">Arizona</td>
+<td align="right">8.1</td>
+<td align="right">294</td>
+<td align="right">80</td>
+<td align="right">31.0</td>
+</tr>
+<tr>
+<td align="left">Arkansas</td>
+<td align="right">8.8</td>
+<td align="right">190</td>
+<td align="right">50</td>
+<td align="right">19.5</td>
+</tr>
+<tr>
+<td align="left">California</td>
+<td align="right">9.0</td>
+<td align="right">276</td>
+<td align="right">91</td>
+<td align="right">40.6</td>
+</tr>
+<tr>
+<td align="left">Colorado</td>
+<td align="right">7.9</td>
+<td align="right">204</td>
+<td align="right">78</td>
+<td align="right">38.7</td>
+</tr>
+</tbody></table>
+
+</div>
+<div style='float:right;width:51%;'>
+  <p><img style='float: right' src='https://i.imgur.com/HKI0367.jpg' /></p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="smallcode" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Base Plots (2/5)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Are we going to do it the old fashion way with base R?</p>
+
+<div style='float:left;width:49%;'>
+  <pre><code class="r">summary(USArrests) #Boring!
+</code></pre>
+
+<pre><code>     Murder         Assault       UrbanPop         Rape     
+ Min.   : 0.80   Min.   : 45   Min.   :32.0   Min.   : 7.3  
+ 1st Qu.: 4.08   1st Qu.:109   1st Qu.:54.5   1st Qu.:15.1  
+ Median : 7.25   Median :159   Median :66.0   Median :20.1  
+ Mean   : 7.79   Mean   :171   Mean   :65.5   Mean   :21.2  
+ 3rd Qu.:11.25   3rd Qu.:249   3rd Qu.:77.8   3rd Qu.:26.2  
+ Max.   :17.40   Max.   :337   Max.   :91.0   Max.   :46.0  
+</code></pre>
+
+<pre><code class="r">boxplot(USArrests) #Lame!
+hist(USArrests$Murder) #Eww!
+</code></pre>
+
+<p>There&#39;s got to be a better way!?  </p>
+
+<p><em>Danger Mouse Crime Apps</em> presents...</p>
+
+</div>
+<div style='float:right;width:51%;'>
+  <p><img src="assets/fig/plotsreal.png" title="plot of chunk plotsreal" alt="plot of chunk plotsreal" style="display: block; margin: auto;" /></p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Danger Zone! (3/5)</h2>
+  </hgroup>
+  <article data-timings="">
+    <iframe frameborder='0' src='https://martinsrc.shinyapps.io/DDPapp/'></iframe>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Features (4/5)</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Loess Smoother Trend Modelling? Got it!</li>
+<li>State Name Display for easy reading? You bet!</li>
+<li>Complete X and Y Variable manipulation? Oorah!</li>
+<li>Heat colour functionality that works on names? Hot!</li>
+<li>Automated cut&#39;n&#39;label of variables for facets? Divisive!</li>
+<li><p>Support using all features simultaneously? Orchestral!</p>
+
+<p><strong>Danger Mouse Crime Apps:</strong> <em>Because there&#39;s always and app for that.</em></p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="smallcode" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>Code (5/5)</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:49%;'>
+  <p><strong>server.R</strong></p>
+
+<pre><code class="r">library(shiny)
+library(ggplot2)
+shinyServer(
+  function(input, output) {
+cuts &lt;- c(&#39;Low&#39;,&#39;Middle&#39;,&#39;High&#39;)
+z &lt;- apply(USArrests, 2, cut, breaks=3,labels=cuts)
+colnames(z) &lt;- paste0(&#39;By&#39;,colnames(z))
+arrests &lt;- cbind(USArrests,z)
+i &lt;- 5
+for(i in i:8) arrests[,i] &lt;- factor(arrests[,i],levels=rev(cuts))
+output$plot &lt;- reactivePlot( function() {
+  ggp &lt;- ggplot(arrests,aes_string(x=input$x, y=input$y)) +
+theme_bw() + geom_point() 
+  facet &lt;- paste0(input$facet,&#39;~.&#39;)
+if (input$colour != &#39;None&#39;)
+ ggp &lt;- ggp + aes_string(color=input$colour) + 
+scale_colour_gradientn(colours=rev(heat.colors(2)))
+if (facet != &#39;.~.&#39;)
+ ggp &lt;- ggp + facet_grid(facet)
+if (input$smooth)
+ ggp &lt;- ggp + geom_smooth()
+if (input$statenames)
+ ggp &lt;- ggp + geom_text(aes(label=gsub(&#39; &#39;,&#39;&#39;,rownames(USArrests))))
+print(ggp)
+},
+height=800)})
+</code></pre>
+
+</div>
+<div style='float:right;width:51%;'>
+  <p><strong>ui.R</strong></p>
+
+<pre><code class="r">library(shiny)
+dataset &lt;- USArrests
+shinyUI(pageWithSidebar(
+ titlePanel(&#39;Danger Zone: Crime Rates by US State&#39;),
+ sidebarPanel(
+   h3(&#39;Supporting Documentation&#39;),
+   helpText(&#39;This app shows a scatter plot of the US Crime Rates data set.&#39;),
+   helpText(&#39;To help you get started, the available widgets are:&#39;),
+p(&#39;1. Add a Loess smooth line&#39;),
+p(&#39;2. Replacing dots with US State names&#39;),
+p(&#39;3. Changing variables on the X and Y axis&#39;),
+p(&#39;4. Adding HEAT colours (i.e. red = more crime)&#39;),
+p(&#39;5. Facetting the data into three groups&#39;),
+   checkboxInput(&#39;smooth&#39;, &#39;Add Loess Smoother&#39;),
+   checkboxInput(&#39;statenames&#39;, &#39;Add State Names&#39;),
+   selectInput(&#39;x&#39;,&#39;X-Axis Variable&#39;,names(dataset), names(dataset)[[3]]),
+   selectInput(&#39;y&#39;,&#39;Y-Axis Variable&#39;,names(dataset), names(dataset)[[2]]),
+   selectInput(&#39;colour&#39;, &#39;Add Colours&#39;, c(&#39;None&#39;, names(dataset))),
+   selectInput(&#39;facet&#39;,&#39;Add Facet&#39;, c(None=&#39;.&#39;, paste0(&#39;By&#39;,names(dataset))))
+),
+  mainPanel(plotOutput(&#39;plot&#39;))
+))
+</code></pre>
+
+<p>Invest, and fight crime with data analysis.</p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title=''>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Base Plots (2/5)'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Danger Zone! (3/5)'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Features (4/5)'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Code (5/5)'>
+         5
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  <script src="libraries/widgets/bootstrap/js/bootstrap.min.js"></script>
+<script src="libraries/widgets/bootstrap/js/bootbox.min.js"></script>
+<script src="libraries/widgets/quiz/js/jquery.quiz.js"></script>
+<script src="libraries/widgets/quiz/js/mustache.min.js"></script>
+<script src="libraries/widgets/quiz/js/quiz-app.js"></script>
+<script src="libraries/widgets/interactive/js/ace/js/ace.js"></script>
+<script src="libraries/widgets/interactive/js/interactive.js"></script>
+
+  <script>  
+  $(function (){ 
+    $("#example").popover(); 
+    $("[rel='tooltip']").tooltip(); 
+  });  
+  </script>  
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
